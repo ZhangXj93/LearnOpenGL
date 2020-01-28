@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		FFF2DDED23DFED8F0083027E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFF2DDEC23DFED8F0083027E /* main.cpp */; };
+		FFF2DDF523DFF1770083027E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF2DDF423DFF1770083027E /* libglfw.3.dylib */; };
+		FFF2DDF623DFF1770083027E /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = FFF2DDF423DFF1770083027E /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		FFF2DDFF23DFF5850083027E /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = FFF2DDFE23DFF5850083027E /* glad.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,11 +23,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		FFF2DDF723DFF1770083027E /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FFF2DDF623DFF1770083027E /* libglfw.3.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		FFF2DDE923DFED8F0083027E /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF2DDEC23DFED8F0083027E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		FFF2DDF423DFF1770083027E /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "../glfw-3.3.2.bin.MACOS/lib-macos/libglfw.3.dylib"; sourceTree = "<group>"; };
+		FFF2DDFC23DFF5850083027E /* glad */ = {isa = PBXFileReference; lastKnownFileType = folder; path = glad; sourceTree = "<group>"; };
+		FFF2DDFD23DFF5850083027E /* KHR */ = {isa = PBXFileReference; lastKnownFileType = folder; path = KHR; sourceTree = "<group>"; };
+		FFF2DDFE23DFF5850083027E /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glad.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FFF2DDF523DFF1770083027E /* libglfw.3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +62,7 @@
 			children = (
 				FFF2DDEB23DFED8F0083027E /* LearnOpenGL */,
 				FFF2DDEA23DFED8F0083027E /* Products */,
+				FFF2DDF323DFF1770083027E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,9 +77,20 @@
 		FFF2DDEB23DFED8F0083027E /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				FFF2DDFC23DFF5850083027E /* glad */,
+				FFF2DDFE23DFF5850083027E /* glad.c */,
+				FFF2DDFD23DFF5850083027E /* KHR */,
 				FFF2DDEC23DFED8F0083027E /* main.cpp */,
 			);
 			path = LearnOpenGL;
+			sourceTree = "<group>";
+		};
+		FFF2DDF323DFF1770083027E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FFF2DDF423DFF1770083027E /* libglfw.3.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,6 +103,7 @@
 				FFF2DDE523DFED8F0083027E /* Sources */,
 				FFF2DDE623DFED8F0083027E /* Frameworks */,
 				FFF2DDE723DFED8F0083027E /* CopyFiles */,
+				FFF2DDF723DFF1770083027E /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -120,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFF2DDED23DFED8F0083027E /* main.cpp in Sources */,
+				FFF2DDFF23DFF5850083027E /* glad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +274,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KSH88VN7TG;
 				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include,
+					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL,
+				);
+				LIBRARY_SEARCH_PATHS = "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/lib-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -251,6 +289,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KSH88VN7TG;
 				ENABLE_HARDENED_RUNTIME = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include,
+					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL,
+				);
+				LIBRARY_SEARCH_PATHS = "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/lib-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
