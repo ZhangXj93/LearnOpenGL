@@ -5,19 +5,20 @@
 #include <cmath>
 
 const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "out vec4 vertexColor;\n" //为片段着色器指定一个颜色输出
+    "layout (location = 0) in vec3 aPos;\n" // 位置变量的属性位置值为 0
+    "layout (location = 1) in vec3 aColor;\n" // 颜色变量的属性位置值为 1
+    "out vec3 vertexColor;\n" //为片段着色器指定一个颜色输出
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" //把输出变量设置为暗红色
+    "   gl_Position = vec4(aPos, 1.0);\n"
+    "   vertexColor = aColor;\n" // 将ourColor设置为我们从顶点数据那里得到的输入颜色
     "}\0";
 const char *fragmentShaderSource1 = "#version 330 core\n"
-    "in vec4 vertexColor;\n"
+    "in vec3 vertexColor;\n"
     "out vec4 FragColor;\n"
     "void main()\n"
     "{\n"
-    "   FragColor = vertexColor;\n"
+    "   FragColor = vec4(vertexColor, 1.0f);\n"
     "}\n\0";
 
 const char *fragmentShaderSource2 = "#version 330 core\n"
@@ -65,9 +66,9 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
     float firstTriangle[] = {
-        -0.9f, -0.5f, 0.0f,  // left
-        -0.0f, -0.5f, 0.0f,  // right
-        -0.45f, 0.5f, 0.0f,  // top
+        -0.9f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // 右下
+        -0.0f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // 左下
+        -0.45f, 0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // 顶部
     };
     float secondTriangle[] = {
         0.0f, -0.5f, 0.0f,  // left
@@ -87,8 +88,12 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
     //将顶点数据复制到缓冲内存中
     glBufferData(GL_ARRAY_BUFFER, sizeof(firstTriangle), firstTriangle, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // 位置属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    // 颜色属性
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    glEnableVertexAttribArray(1);
     
     // bind the Vertex Array Object first
     glBindVertexArray(VAO[1]);
