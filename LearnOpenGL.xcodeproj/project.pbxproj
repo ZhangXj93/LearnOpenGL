@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF95086723E2EF0600883480 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF95086523E2EF0600883480 /* shader.cpp */; };
 		FFF2DDED23DFED8F0083027E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFF2DDEC23DFED8F0083027E /* main.cpp */; };
 		FFF2DDF523DFF1770083027E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF2DDF423DFF1770083027E /* libglfw.3.dylib */; };
 		FFF2DDF623DFF1770083027E /* libglfw.3.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = FFF2DDF423DFF1770083027E /* libglfw.3.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -37,6 +38,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FF95086523E2EF0600883480 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
+		FF95086623E2EF0600883480 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		FFF2DDE923DFED8F0083027E /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF2DDEC23DFED8F0083027E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		FFF2DDF423DFF1770083027E /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "../glfw-3.3.2.bin.MACOS/lib-macos/libglfw.3.dylib"; sourceTree = "<group>"; };
@@ -81,6 +84,8 @@
 				FFF2DDFE23DFF5850083027E /* glad.c */,
 				FFF2DDFD23DFF5850083027E /* KHR */,
 				FFF2DDEC23DFED8F0083027E /* main.cpp */,
+				FF95086523E2EF0600883480 /* shader.cpp */,
+				FF95086623E2EF0600883480 /* shader.hpp */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF95086723E2EF0600883480 /* shader.cpp in Sources */,
 				FFF2DDED23DFED8F0083027E /* main.cpp in Sources */,
 				FFF2DDFF23DFF5850083027E /* glad.c in Sources */,
 			);
