@@ -84,6 +84,7 @@ int main()
         //------> 8. 画三角形
         ourShader.use();
         ourShader.setFloat("ourColor", 1.0f);
+        ourShader.setFloat("offset_x", 0.5f);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
