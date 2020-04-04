@@ -38,6 +38,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FF648E8C2438454200CFF562 /* resource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resource; sourceTree = "<group>"; };
 		FF95086523E2EF0600883480 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		FF95086623E2EF0600883480 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		FFF2DDE923DFED8F0083027E /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +81,7 @@
 		FFF2DDEB23DFED8F0083027E /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				FF648E8C2438454200CFF562 /* resource */,
 				FFF2DDFC23DFF5850083027E /* glad */,
 				FFF2DDFE23DFF5850083027E /* glad.c */,
 				FFF2DDFD23DFF5850083027E /* KHR */,
