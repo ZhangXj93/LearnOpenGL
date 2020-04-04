@@ -2,9 +2,11 @@
 out vec4 FragColor;
 
 uniform vec4 ourColor; // 在OpenGL程序代码中设定这个变量
-in vec3 vertexPosition;
+in vec2 outTexture;
+
+uniform sampler2D ourTexture;
 
 void main()
 {
-    FragColor = vec4(vertexPosition, 1.0);
+    FragColor = texture(ourTexture, outTexture);
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF648E8F243867BE00CFF562 /* addStbImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF648E8E243867BE00CFF562 /* addStbImage.cpp */; };
 		FF95086723E2EF0600883480 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FF95086523E2EF0600883480 /* shader.cpp */; };
 		FFF2DDED23DFED8F0083027E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FFF2DDEC23DFED8F0083027E /* main.cpp */; };
 		FFF2DDF523DFF1770083027E /* libglfw.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF2DDF423DFF1770083027E /* libglfw.3.dylib */; };
@@ -39,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		FF648E8C2438454200CFF562 /* resource */ = {isa = PBXFileReference; lastKnownFileType = folder; path = resource; sourceTree = "<group>"; };
+		FF648E8D2438677100CFF562 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		FF648E8E243867BE00CFF562 /* addStbImage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = addStbImage.cpp; sourceTree = "<group>"; };
 		FF95086523E2EF0600883480 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		FF95086623E2EF0600883480 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
 		FFF2DDE923DFED8F0083027E /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +84,7 @@
 		FFF2DDEB23DFED8F0083027E /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				FF648E8D2438677100CFF562 /* stb_image.h */,
 				FF648E8C2438454200CFF562 /* resource */,
 				FFF2DDFC23DFF5850083027E /* glad */,
 				FFF2DDFE23DFF5850083027E /* glad.c */,
@@ -88,6 +92,7 @@
 				FFF2DDEC23DFED8F0083027E /* main.cpp */,
 				FF95086523E2EF0600883480 /* shader.cpp */,
 				FF95086623E2EF0600883480 /* shader.hpp */,
+				FF648E8E243867BE00CFF562 /* addStbImage.cpp */,
 			);
 			path = LearnOpenGL;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF95086723E2EF0600883480 /* shader.cpp in Sources */,
+				FF648E8F243867BE00CFF562 /* addStbImage.cpp in Sources */,
 				FFF2DDED23DFED8F0083027E /* main.cpp in Sources */,
 				FFF2DDFF23DFF5850083027E /* glad.c in Sources */,
 			);
