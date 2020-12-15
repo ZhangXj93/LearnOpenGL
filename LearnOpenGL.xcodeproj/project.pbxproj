@@ -44,6 +44,7 @@
 		FF648E8E243867BE00CFF562 /* addStbImage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = addStbImage.cpp; sourceTree = "<group>"; };
 		FF95086523E2EF0600883480 /* shader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = shader.cpp; sourceTree = "<group>"; };
 		FF95086623E2EF0600883480 /* shader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = shader.hpp; sourceTree = "<group>"; };
+		FF9CA6EF25889A7E0078FFE5 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 		FFF2DDE923DFED8F0083027E /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF2DDEC23DFED8F0083027E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		FFF2DDF423DFF1770083027E /* libglfw.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.dylib; path = "../glfw-3.3.2.bin.MACOS/lib-macos/libglfw.3.dylib"; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 		FFF2DDEB23DFED8F0083027E /* LearnOpenGL */ = {
 			isa = PBXGroup;
 			children = (
+				FF9CA6EF25889A7E0078FFE5 /* include */,
 				FF648E8D2438677100CFF562 /* stb_image.h */,
 				FF648E8C2438454200CFF562 /* resource */,
 				FFF2DDFC23DFF5850083027E /* glad */,
@@ -291,6 +293,8 @@
 				HEADER_SEARCH_PATHS = (
 					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include,
 					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL,
+					/User/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/glm,
+					/User/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include/glm,
 				);
 				LIBRARY_SEARCH_PATHS = "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/lib-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -306,6 +310,8 @@
 				HEADER_SEARCH_PATHS = (
 					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include,
 					/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL,
+					/User/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/glm,
+					/User/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/include/glm,
 				);
 				LIBRARY_SEARCH_PATHS = "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/lib-macos";
 				PRODUCT_NAME = "$(TARGET_NAME)";

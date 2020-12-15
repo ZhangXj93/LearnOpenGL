@@ -7,6 +7,10 @@
 #include "shader.hpp"
 #include "stb_image.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #define VERRTEX_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/vertexcolor.vex"
 #define FRAG_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/fragcolor.frag"
 
@@ -111,7 +115,6 @@ int main()
     //---------> 5. 创建着色器对象
     Shader ourShader(VERRTEX_COLOR_PATH, FRAG_COLOR_PATH);
     
-    
     //循环渲染
     while(!glfwWindowShouldClose(window))
     {
@@ -121,10 +124,19 @@ int main()
         //渲染指令
         draw(window);
         
+        static float i = 0.0f;
+        i += 0.1;
+        float angle = i + 0.1 >= 360.0 ? 0 : i + 1;
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+        trans = glm::scale(trans, glm::vec3(1.5, 1.5, 1.5));
+        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 1.0, 0.0));
+        
         //------> 8. 画三角形
         ourShader.use();
 //        ourShader.setFloat("ourColor", 1.0f);
 //        ourShader.setFloat("offset_x", 0.5f);
+        ourShader.setMat4("transform", trans);
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
