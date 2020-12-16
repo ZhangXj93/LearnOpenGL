@@ -11,6 +11,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+const float screen_width = 800.0f;
+const float screen_height = 600.0f;
 #define VERRTEX_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/vertexcolor.vex"
 #define FRAG_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/fragcolor.frag"
 
@@ -29,7 +31,7 @@ int main()
     
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //MAC环境下需加这一句才能使以上配置生效
     
-    GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(screen_width, screen_height, "LearnOpenGL", nullptr, nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -46,7 +48,7 @@ int main()
     }
     
     //设置视口
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, screen_width, screen_height);
     
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     
@@ -115,6 +117,21 @@ int main()
     //---------> 5. 创建着色器对象
     Shader ourShader(VERRTEX_COLOR_PATH, FRAG_COLOR_PATH);
     
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::scale(trans, glm::vec3(1.7, 1.7, 1.7));
+    
+    //----------> 三大矩阵
+    // 模型矩阵
+    glm::mat4 model;
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    // 观察矩阵
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    // 投影矩阵
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), screen_width/screen_height, 0.1f, 100.0f);
+    
+    
     //循环渲染
     while(!glfwWindowShouldClose(window))
     {
@@ -124,19 +141,22 @@ int main()
         //渲染指令
         draw(window);
         
-        static float i = 0.0f;
-        i += 0.1;
-        float angle = i + 0.1 >= 360.0 ? 0 : i + 1;
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
-        trans = glm::scale(trans, glm::vec3(1.5, 1.5, 1.5));
-        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 1.0, 0.0));
+//        static float i = 0.0f;
+//        i += 0.1;
+//        float angle = i + 0.1 >= 360.0 ? 0 : i + 1;
+//        glm::mat4 trans = glm::mat4(1.0f);
+//        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 0.0, 1.0));
+//        trans = glm::scale(trans, glm::vec3(1.5, 1.5, 1.5));
+//        trans = glm::rotate(trans, glm::radians(angle), glm::vec3(0.0, 1.0, 0.0));
         
         //------> 8. 画三角形
         ourShader.use();
 //        ourShader.setFloat("ourColor", 1.0f);
 //        ourShader.setFloat("offset_x", 0.5f);
         ourShader.setMat4("transform", trans);
+        ourShader.setMat4("model", model);
+        ourShader.setMat4("view", view);
+        ourShader.setMat4("projection", projection);
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

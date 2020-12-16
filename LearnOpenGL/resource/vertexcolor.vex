@@ -6,9 +6,13 @@ uniform float offset_x;
 out vec2 outTexture; // 输出顶点位置
 
 uniform mat4 transform;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
-    gl_Position = transform * vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
+    // 注意乘法要从右向左读
+    gl_Position = projection * view * model * transform * vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
     outTexture = aTexture;
 }
