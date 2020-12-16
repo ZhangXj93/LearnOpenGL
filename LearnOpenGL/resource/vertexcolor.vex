@@ -1,6 +1,6 @@
 #version 330 core
 layout (location = 0) in vec3 aPos; // 位置变量的属性位置值为0
-layout (location = 2) in vec2 aTexture; //纹理变量属性的位置为2
+layout (location = 1) in vec2 aTexture; //纹理变量属性的位置为1，这里要与顶点形式对应，否则纹理不生效
 
 uniform float offset_x;
 out vec2 outTexture; // 输出顶点位置
@@ -13,6 +13,6 @@ uniform mat4 projection;
 void main()
 {
     // 注意乘法要从右向左读
-    gl_Position = projection * view * model * transform * vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
+    gl_Position = projection * view * model * vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
     outTexture = aTexture;
 }

@@ -1,12 +1,13 @@
 #version 330 core
 out vec4 FragColor;
 
-uniform vec4 ourColor; // 在OpenGL程序代码中设定这个变量
 in vec2 outTexture;
 
-uniform sampler2D ourTexture;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
 
 void main()
 {
-    FragColor = texture(ourTexture, outTexture);
+//    FragColor = texture(ourTexture, outTexture);
+    FragColor = mix(texture(texture1, outTexture), texture(texture2, outTexture), 0.2);
 }
