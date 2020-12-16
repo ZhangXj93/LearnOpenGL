@@ -48,6 +48,8 @@ int main()
         return -1;
     }
     
+    glEnable(GL_DEPTH_TEST);
+    
     // 立方体顶点
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -236,5 +238,5 @@ void processInput(GLFWwindow *window)
 void draw(GLFWwindow *window)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now! 与开启深度测试一起使用
 }
