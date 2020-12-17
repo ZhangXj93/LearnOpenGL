@@ -6,6 +6,7 @@
 
 #include "shader.hpp"
 #include "stb_image.h"
+#include "cameraSystem.hpp"
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -16,19 +17,13 @@ const float screen_height = 600.0f;
 #define VERRTEX_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/vertexcolor.vex"
 #define FRAG_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/fragcolor.frag"
 
-// 摄像机位置
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+// camera
+CameraSystem camera(glm::vec3(0.0f, 0.0f, 3.0f));
 static float deltaTime = 0.0f;
 static float lastFrame = 0.0f;
 
 float lastX = screen_width / 2, lastY = screen_height / 2; //记录上一帧的鼠标位置，初始位置屏幕中心
 bool firstMouse = true;
-float pitch = 0.0f;
-float yaw = -90.0f; //yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left. 这里初始化为-90, 初始化为0时会无法看到画面
-
-float fov = 45.0f;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -236,13 +231,11 @@ int main()
         model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         // 观察矩阵
         glm::mat4 view;
-
-        // lookAt矩阵参数：摄像机位置，目标位置，up向量
-        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        view = camera.GetViewMatrix();
         
         // 投影矩阵
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(fov), screen_width/screen_height, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(camera.Zoom), screen_width/screen_height, 0.1f, 100.0f);
         ourShader.setMat4("model", model);
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
@@ -258,8 +251,6 @@ int main()
 
           glDrawArrays(GL_TRIANGLES, 0, 36);
         }
-        
-//        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -285,15 +276,14 @@ void processInput(GLFWwindow *window)
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     
-    float camera_speed = 2.5f * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += camera_speed * cameraFront;
+        camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= camera_speed * cameraFront;
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
+        camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
+        camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 void draw(GLFWwindow *window)
@@ -316,31 +306,10 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastX = xpos;
     lastY = ypos;
 
-    float sensitivity = 0.05;
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw   += xoffset;
-    pitch += yoffset;
-
-    if(pitch > 89.0f)
-        pitch = 89.0f;
-    if(pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-  if(fov >= 1.0f && fov <= 45.0f)
-    fov -= yoffset;
-  if(fov <= 1.0f)
-    fov = 1.0f;
-  if(fov >= 45.0f)
-    fov = 45.0f;
+    camera.ProcessMouseScroll(yoffset);
 }
