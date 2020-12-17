@@ -59,6 +59,7 @@ int main()
     
     glfwSetCursorPosCallback(window, mouse_callback); // 添加鼠标事件监听
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 鼠标事件设置，隐藏光标，并捕捉它
+    glfwSetScrollCallback(window, scroll_callback); //鼠标滚轮事件
     
     //初始化glad
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
