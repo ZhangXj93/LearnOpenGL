@@ -28,10 +28,13 @@ bool firstMouse = true;
 float pitch = 0.0f;
 float yaw = -90.0f; //yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left. 这里初始化为-90, 初始化为0时会无法看到画面
 
+float fov = 45.0f;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void draw(GLFWwindow *window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos); //鼠标事件监听
+void mouse_callback(GLFWwindow* window, double xpos, double ypos); //鼠标移动事件监听
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); //鼠标滚轮事件监听
 
 int main()
 {
@@ -238,7 +241,7 @@ int main()
         
         // 投影矩阵
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), screen_width/screen_height, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(fov), screen_width/screen_height, 0.1f, 100.0f);
         ourShader.setMat4("model", model);
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
@@ -329,4 +332,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(front);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+  if(fov >= 1.0f && fov <= 45.0f)
+    fov -= yoffset;
+  if(fov <= 1.0f)
+    fov = 1.0f;
+  if(fov >= 45.0f)
+    fov = 45.0f;
 }
