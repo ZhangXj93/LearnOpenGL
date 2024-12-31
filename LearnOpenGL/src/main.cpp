@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "config.h"
 #include <iostream>
 #include <cmath>
 
@@ -14,10 +15,10 @@
 
 const float screen_width = 800.0f;
 const float screen_height = 600.0f;
-#define VERRTEX_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/vertexcolor.vex"
-#define FRAG_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/fragcolor.frag"
-#define LIGHT_VERRTEX_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/lightVertexColor.vex"
-#define LIGHT_FRAG_COLOR_PATH "/Users/zhangxinjie01/OpenGL/LearnOpenGL/LearnOpenGL/resource/lightFragColor.frag"
+const std::string VERRTEX_COLOR_PATH = (PROJECT_PATH + "/resource/vertexcolor.vex");
+const std::string FRAG_COLOR_PATH = (PROJECT_PATH + "/resource/fragcolor.frag");
+const std::string LIGHT_VERRTEX_COLOR_PATH = (PROJECT_PATH + "/resource/lightVertexColor.vex");
+const std::string LIGHT_FRAG_COLOR_PATH = (PROJECT_PATH + "/resource/lightFragColor.frag");
 
 // camera
 CameraSystem camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -139,8 +140,8 @@ int main()
     glEnableVertexAttribArray(0);
     
     //---------> 5. 创建着色器对象
-    Shader ourShader(VERRTEX_COLOR_PATH, FRAG_COLOR_PATH);
-    Shader lightSharder(LIGHT_VERRTEX_COLOR_PATH, LIGHT_FRAG_COLOR_PATH);
+    Shader ourShader(VERRTEX_COLOR_PATH.c_str(), FRAG_COLOR_PATH.c_str());
+    Shader lightSharder(LIGHT_VERRTEX_COLOR_PATH.c_str(), LIGHT_FRAG_COLOR_PATH.c_str());
     
     //循环渲染
     while(!glfwWindowShouldClose(window))
