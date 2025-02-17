@@ -1,4 +1,6 @@
 LearnOpenGL.xcodeproj/xcuserdata/
 LearnOpenGL*/build
 .DS_Store
+.vscode
+.comate
 

@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "sstream": "cpp",
-        "fstream": "cpp"
-    },
-    "cmake.sourceDirectory": "/Users/zhangxinjie01/Learn/GitHub/LearnOpenGL/LearnOpenGL"
-}
