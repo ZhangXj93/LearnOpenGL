@@ -223,6 +223,9 @@ int main()
         ourShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
         ourShader.setVec3("light.position", lightPos);
         // ourShader.setVec3("light.direction", lightDir);
+        ourShader.setFloat("light.constant", 1.0f);
+        ourShader.setFloat("light.linear", 0.09f);
+        ourShader.setFloat("light.quadratic", 0.032f);
         
         //----------> 三大矩阵
         // 观察矩阵
@@ -258,18 +261,18 @@ int main()
         }
         glBindVertexArray(0);
         
-        // // light cube
-        // lightSharder.use();
-        // lightSharder.setMat4("projection", projection);
-        // lightSharder.setMat4("view", view);
-        // model = glm::mat4(1.0f);
-        // model = glm::translate(model, lightPos);
-        // model = glm::scale(model, glm::vec3(0.1f)); // a smaller cube
-        // lightSharder.setMat4("model", model);
+        // light cube
+        lightSharder.use();
+        lightSharder.setMat4("projection", projection);
+        lightSharder.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.05f)); // a smaller cube
+        lightSharder.setMat4("model", model);
         
-        // // 绘制灯立方体对象
-        // glBindVertexArray(lightVAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
+        // 绘制灯立方体对象
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
