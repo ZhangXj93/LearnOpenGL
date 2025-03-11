@@ -36,6 +36,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos); //鼠标移�
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset); //鼠标滚轮事件监听
 
 glm::vec3 lightPos(0.6f, 0.5f, 1.0f);
+glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 
 int main()
 {
@@ -115,6 +116,20 @@ int main()
          0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
+    };
+
+    // Positions all containers
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
     };
     
     unsigned int VAO;
@@ -197,19 +212,17 @@ int main()
         
         ourShader.use();
         glm::vec3 lightColor = glm::vec3(1.0f);
-        glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+        glm::vec3 objectColor = glm::vec3(1.0f);
         ourShader.setVec3("objectColor", objectColor);
 
         ourShader.setVec3("viewPos", camera.m_position);
 
-        // ourShader.setVec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-        // ourShader.setVec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
-        // ourShader.setVec3("material.specular", glm::vec3(1.0f, 0.5f, 0.31f));
         ourShader.setFloat("material.shininess", 32.0f);
         ourShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f) * lightColor);
         ourShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f) * lightColor);
         ourShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
         ourShader.setVec3("light.position", lightPos);
+        // ourShader.setVec3("light.direction", lightDir);
         
         //----------> 三大矩阵
         // 观察矩阵
@@ -234,20 +247,29 @@ int main()
         glBindTexture(GL_TEXTURE_2D, specularMap);
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(GLuint i = 0; i < 10; i++)
+        {
+            model = glm::mat4();
+            model = glm::translate(model, cubePositions[i]);
+            GLfloat angle = 20.0f * i;
+            model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+            ourShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        glBindVertexArray(0);
         
-        // light cube
-        lightSharder.use();
-        lightSharder.setMat4("projection", projection);
-        lightSharder.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.1f)); // a smaller cube
-        lightSharder.setMat4("model", model);
+        // // light cube
+        // lightSharder.use();
+        // lightSharder.setMat4("projection", projection);
+        // lightSharder.setMat4("view", view);
+        // model = glm::mat4(1.0f);
+        // model = glm::translate(model, lightPos);
+        // model = glm::scale(model, glm::vec3(0.1f)); // a smaller cube
+        // lightSharder.setMat4("model", model);
         
-        // 绘制灯立方体对象
-        glBindVertexArray(lightVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // // 绘制灯立方体对象
+        // glBindVertexArray(lightVAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
