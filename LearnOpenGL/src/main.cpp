@@ -221,12 +221,17 @@ int main()
         ourShader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f) * lightColor);
         ourShader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f) * lightColor);
         ourShader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-        ourShader.setVec3("light.position", lightPos);
+        // ourShader.setVec3("light.position", lightPos);
         // ourShader.setVec3("light.direction", lightDir);
         ourShader.setFloat("light.constant", 1.0f);
         ourShader.setFloat("light.linear", 0.09f);
         ourShader.setFloat("light.quadratic", 0.032f);
-        
+
+        ourShader.setVec3("light.position", camera.m_position);
+        ourShader.setVec3("light.direction", camera.m_front);
+        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f))); // 注意这里使用了 glm::cos 来获取角度的余弦值，而不是角度本身，节省性能。
+        ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+
         //----------> 三大矩阵
         // 观察矩阵
         glm::mat4 view;

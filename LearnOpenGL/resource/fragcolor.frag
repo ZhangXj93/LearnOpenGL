@@ -22,18 +22,23 @@ struct Light
     float constant;
     float linear;
     float quadratic;
+    vec3 direction;  // 光源方向
+    float cutOff;    // 切光角（内圆锥角度的余弦值）
+    float outerCutOff; // 外圆锥角度的余弦值
 };
 uniform Light light;
-
-uniform vec3 objectColor;
 
 void main()
 {
     // 环境光
     vec3 ambient = vec3(texture(material.diffuse, TexCoords)) * light.ambient;
+    vec3 lightDir = normalize(light.position - outFragPos);
+
+    float theta = dot(lightDir, -light.direction);
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
 
     // 漫反射光
-    vec3 lightDir = normalize(light.position - outFragPos);
     vec3 normal = normalize(outNormal);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = vec3(texture(material.diffuse, TexCoords)) * diff * light.diffuse;
@@ -48,8 +53,6 @@ void main()
     // 衰减
     float distance = length(light.position - outFragPos);
     float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
-    vec3 finalColor = (diffuse + ambient + specular) * attenuation;
-
+    vec3 finalColor = ambient + (diffuse + specular) * attenuation * intensity;
     FragColor = vec4(finalColor, 1.0);
 }
