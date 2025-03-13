@@ -1,0 +1,22 @@
+#version 330 core
+layout (location = 0) in vec3 aPos; // 位置变量的属性位置值为0
+layout (location = 1) in vec3 aNormal; //法向量
+layout (location = 2) in vec2 texCoords;
+
+out vec3 outNormal; // 输出法线位置
+out vec3 outFragPos; // 输出片段着色器位置
+out vec2 TexCoords; 
+
+uniform mat4 transform;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    // 注意乘法要从右向左读
+    gl_Position = projection * view * model * vec4(aPos, 1.0); // 注意我们如何把一个vec3作为vec4的构造器的参数
+    outNormal = aNormal;
+    outFragPos = vec3(model * vec4(aPos, 1.0));
+    TexCoords = texCoords;
+}
