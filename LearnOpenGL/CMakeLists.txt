@@ -14,6 +14,7 @@ set(LEARN_OPENGL_SOURCE_PATH ${PROJTCT_PATH}/src)
 
 set(SDK_LIBS
     ${OPENGL_LIB_PATH}/arm64/libglfw.3.dylib
+    ${OPENGL_LIB_PATH}/arm64/libassimp.5.dylib
 )
 
 include_directories(
@@ -27,6 +28,7 @@ set(LEARN_OPENGL_SOURCE
     ${LEARN_OPENGL_SOURCE_PATH}/addStbImage.cpp
     ${LEARN_OPENGL_SOURCE_PATH}/cameraSystem.cpp
     ${LEARN_OPENGL_SOURCE_PATH}/shader.cpp
+    ${LEARN_OPENGL_SOURCE_PATH}/model.cpp
 )
 
 add_executable(learnOpenGL
