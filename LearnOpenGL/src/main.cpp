@@ -18,6 +18,7 @@ const float screen_width = 800.0f;
 const float screen_height = 600.0f;
 const std::string VERRTEX_COLOR_PATH = (PROJECT_PATH + "/resource/vertexcolor.vex");
 const std::string FRAG_COLOR_PATH = (PROJECT_PATH + "/resource/fragcolor.frag");
+const std::string PURE_COLOR_FRAG_COLOR_PATH = (PROJECT_PATH + "/resource/fragcolor_purecolor.frag");
 const std::string LIGHT_VERRTEX_COLOR_PATH = (PROJECT_PATH + "/resource/lightVertexColor.vex");
 const std::string LIGHT_FRAG_COLOR_PATH = (PROJECT_PATH + "/resource/lightFragColor.frag");
 
@@ -156,13 +157,10 @@ int main()
     // -------------
     unsigned int cubeTexture  = loadTexture(std::string(PROJECT_PATH + "/resource/marble.jpg").c_str());
     unsigned int floorTexture = loadTexture(std::string(PROJECT_PATH + "/resource/metal.png").c_str());
-
-    glEnable(GL_DEPTH_TEST);
-    // glDepthFunc(GL_ALWAYS);  // 模拟关闭深度检测效果
-    // glDepthMask(GL_FALSE);   // 启用只读检测模式
     
     //---------> 5. 创建着色器对象
     Shader ourShader(VERRTEX_COLOR_PATH.c_str(), FRAG_COLOR_PATH.c_str());
+    Shader pureColorShader(VERRTEX_COLOR_PATH.c_str(), PURE_COLOR_FRAG_COLOR_PATH.c_str());
     
     //循环渲染
     while(!glfwWindowShouldClose(window))
@@ -176,20 +174,36 @@ int main()
         
         //渲染指令
         draw(window);
-        
-        ourShader.use();
 
-        //----------> 三大矩阵
-        // 观察矩阵
+        glEnable(GL_DEPTH_TEST);
+        // glDepthFunc(GL_ALWAYS);  // 模拟关闭深度检测效果
+        // glDepthMask(GL_FALSE);   // 启用只读检测模式
+
         glm::mat4 view;
         view = camera.GetViewMatrix();
-        
-        // 投影矩阵
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(camera.Zoom), screen_width/screen_height, 0.1f, 100.0f);
+        
+        ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
-        
+
+        // floor
+        glStencilMask(0x00); // 关闭模板缓冲写入
+        glBindVertexArray(planeVAO);
+        glBindTexture(GL_TEXTURE_2D, floorTexture);
+        ourShader.setMat4("view", view);
+        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("model", glm::mat4(1.0f));
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+
+        // 开启深度测试、模版板测试的情况下绘制立方体，将模板缓冲设置为1
+        glEnable(GL_STENCIL_TEST);
+        glStencilMask(0xFF); // 设置模板缓冲为可写状态
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
         // cubes
         glm::mat4 model = glm::mat4(1.0f);
         glBindVertexArray(cubeVAO);
@@ -202,12 +216,31 @@ int main()
         model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
         ourShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        // floor
-        glBindVertexArray(planeVAO);
-        glBindTexture(GL_TEXTURE_2D, floorTexture);
-        ourShader.setMat4("model", glm::mat4(1.0f));
-        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
+
+        // 开启深度测试，关闭深度缓冲写入的情况下，绘制放大的立方体，只绘制模板值不为1的片段
+        glStencilMask(0x00); // 关闭模板缓冲写入
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF); // 筛选出模板值不为1的片段
+        glDisable(GL_DEPTH_TEST);
+        GLfloat scale = 1.1f;
+        pureColorShader.use();
+        pureColorShader.setMat4("view", view);
+        pureColorShader.setMat4("projection", projection);
+        model = glm::mat4(1.0f);
+        glBindVertexArray(cubeVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, cubeTexture); 	
+        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+        model = glm::scale(model, glm::vec3(scale, scale, scale));
+        pureColorShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(scale, scale, scale));
+        pureColorShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glStencilMask(0xFF); // 设置模板缓冲为可写状态
         
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -242,7 +275,7 @@ void processInput(GLFWwindow *window)
 void draw(GLFWwindow *window)
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now! 与开启深度测试一起使用
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
