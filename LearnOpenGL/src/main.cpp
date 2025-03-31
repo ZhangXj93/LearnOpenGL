@@ -128,6 +128,18 @@ int main()
          5.0f, -0.5f, -5.0f,  2.0f, 2.0f								
     };
 
+    float transparentVertices[] = {
+        // Positions         // Texture Coords (swapped y coordinates because texture is flipped upside down)
+        0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+        0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+        1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+        0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+        1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+        1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+    };
+
+
     // cube VAO
     unsigned int cubeVAO, cubeVBO;
     glGenVertexArrays(1, &cubeVAO);
@@ -153,10 +165,31 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glBindVertexArray(0);
 
+    // vegetation VAO
+    unsigned int transparentVAO, transparentVBO;
+    glGenVertexArrays(1, &transparentVAO);
+    glGenBuffers(1, &transparentVBO);
+    glBindVertexArray(transparentVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glBindVertexArray(0);
+
+    std::vector<glm::vec3> vegetation;
+    vegetation.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
+    vegetation.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
+    vegetation.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
+    vegetation.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
+    vegetation.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));
+
     // load textures
     // -------------
     unsigned int cubeTexture  = loadTexture(std::string(PROJECT_PATH + "/resource/marble.jpg").c_str());
     unsigned int floorTexture = loadTexture(std::string(PROJECT_PATH + "/resource/metal.png").c_str());
+    unsigned int grassTexture = loadTexture(std::string(PROJECT_PATH + "/resource/grass.png").c_str());
     
     //---------> 5. 创建着色器对象
     Shader ourShader(VERRTEX_COLOR_PATH.c_str(), FRAG_COLOR_PATH.c_str());
@@ -176,8 +209,6 @@ int main()
         draw(window);
 
         glEnable(GL_DEPTH_TEST);
-        // glDepthFunc(GL_ALWAYS);  // 模拟关闭深度检测效果
-        // glDepthMask(GL_FALSE);   // 启用只读检测模式
 
         glm::mat4 view;
         view = camera.GetViewMatrix();
@@ -189,7 +220,6 @@ int main()
         ourShader.setMat4("projection", projection);
 
         // floor
-        glStencilMask(0x00); // 关闭模板缓冲写入
         glBindVertexArray(planeVAO);
         glBindTexture(GL_TEXTURE_2D, floorTexture);
         ourShader.setMat4("view", view);
@@ -197,12 +227,6 @@ int main()
         ourShader.setMat4("model", glm::mat4(1.0f));
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
-
-        // 开启深度测试、模版板测试的情况下绘制立方体，将模板缓冲设置为1
-        glEnable(GL_STENCIL_TEST);
-        glStencilMask(0xFF); // 设置模板缓冲为可写状态
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
         // cubes
         glm::mat4 model = glm::mat4(1.0f);
@@ -218,30 +242,17 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
-        // 开启深度测试，关闭深度缓冲写入的情况下，绘制放大的立方体，只绘制模板值不为1的片段
-        glStencilMask(0x00); // 关闭模板缓冲写入
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF); // 筛选出模板值不为1的片段
-        glDisable(GL_DEPTH_TEST);
-        GLfloat scale = 1.1f;
-        pureColorShader.use();
-        pureColorShader.setMat4("view", view);
-        pureColorShader.setMat4("projection", projection);
-        model = glm::mat4(1.0f);
-        glBindVertexArray(cubeVAO);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, cubeTexture); 	
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-        model = glm::scale(model, glm::vec3(scale, scale, scale));
-        pureColorShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(scale, scale, scale));
-        pureColorShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(transparentVAO);
+        glBindTexture(GL_TEXTURE_2D, grassTexture);  
+        for(GLuint i = 0; i < vegetation.size(); i++)
+        {
+            model = glm::mat4();
+            model = glm::translate(model, vegetation[i]);
+            ourShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        }  
         glBindVertexArray(0);
-        glStencilMask(0xFF); // 设置模板缓冲为可写状态
-        
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -323,8 +334,8 @@ unsigned int loadTexture(char const *path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
