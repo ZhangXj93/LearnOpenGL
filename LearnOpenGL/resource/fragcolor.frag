@@ -15,7 +15,5 @@ float LinearizeDepth(float depth) {
 void main()
 {    
     vec4 texColor = texture(texture1, TexCoords);
-    if(texColor.a < 0.1)
-        discard;
     color = texColor;
 }

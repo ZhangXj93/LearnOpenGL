@@ -4,6 +4,7 @@
 #include "config.h"
 #include <iostream>
 #include <cmath>
+#include <map>
 
 #include "shader.hpp"
 #include "stb_image.h"
@@ -190,6 +191,7 @@ int main()
     unsigned int cubeTexture  = loadTexture(std::string(PROJECT_PATH + "/resource/marble.jpg").c_str());
     unsigned int floorTexture = loadTexture(std::string(PROJECT_PATH + "/resource/metal.png").c_str());
     unsigned int grassTexture = loadTexture(std::string(PROJECT_PATH + "/resource/grass.png").c_str());
+    unsigned int windowTexture = loadTexture(std::string(PROJECT_PATH + "/resource/blending_transparent_window.png").c_str());
     
     //---------> 5. 创建着色器对象
     Shader ourShader(VERRTEX_COLOR_PATH.c_str(), FRAG_COLOR_PATH.c_str());
@@ -209,6 +211,8 @@ int main()
         draw(window);
 
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glm::mat4 view;
         view = camera.GetViewMatrix();
@@ -243,11 +247,19 @@ int main()
         glBindVertexArray(0);
 
         glBindVertexArray(transparentVAO);
-        glBindTexture(GL_TEXTURE_2D, grassTexture);  
-        for(GLuint i = 0; i < vegetation.size(); i++)
+        glBindTexture(GL_TEXTURE_2D, windowTexture);  
+
+        std::map<float, glm::vec3> sorted;
+        for (unsigned int i = 0; i < vegetation.size(); i++) // windows contains all window positions
+        {
+            GLfloat distance = glm::length(cameraPos - vegetation[i]);
+            sorted[distance] = vegetation[i];
+        }
+
+        for(std::map<float,glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
         {
             model = glm::mat4();
-            model = glm::translate(model, vegetation[i]);
+            model = glm::translate(model, it->second);
             ourShader.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }  
